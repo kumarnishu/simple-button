@@ -1,0 +1,8 @@
+{
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ],
+  "ignoreDeprecations": "6.0"   // ✅ ADD THIS (fixes your error)
+}
