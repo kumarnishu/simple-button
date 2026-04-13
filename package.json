@@ -16,7 +16,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@kumarnishu/react-table": "^0.0.6",
+    "@kumarnishu/basic-react-table": "^0.0.10",
     "react": "^18 || ^19",
     "react-dom": "^18 || ^19"
   },

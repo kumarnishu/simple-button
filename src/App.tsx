@@ -1,168 +1,164 @@
+import { useMemo } from "react";
+import { Box, Typography, Paper, Chip, IconButton } from "@mui/material";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faPenToSquare,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
+import {ReactTable} from "@kumarnishu/basic-react-table";
 
-import { FeatureTable, HeaderType, type FeatureData, type FeatureHeader,} from "@kumarnishu/react-table";
-import { users } from "./data";
-// import  "@kumarnishu/react-table/dist/index.css";
 
-export const userHeaders: FeatureHeader[] = [
+type Tenant = {
+  id: number;
+  name: string;
+  domain: string;
+  tenantIdentifier: string;
+  timezone: string;
+  status: "Active" | "Inactive";
+};
+
+// 🔥 Fake Data
+const tenants: Tenant[] = [
   {
     id: 1,
-    key: "id",
-    header: "ID",
-    type: HeaderType.Number,
-    width: 20,
-    editable: false,
-    hidden: false,
-    dateOptions: {},
+    name: "Agarson Shoes",
+    domain: "agarson.com",
+    tenantIdentifier: "AS",
+    timezone: "Asia/Kolkata",
+    status: "Active",
   },
   {
     id: 2,
-    key: "name",
-    header: "Name",
-    type: HeaderType.Text,
-    width: 180,
-    editable: true,
-    hidden: false,
-    dateOptions: {},
+    name: "TechNova",
+    domain: "technova.com",
+    tenantIdentifier: "TN",
+    timezone: "Europe/London",
+    status: "Inactive",
   },
   {
     id: 3,
-    key: "email",
-    header: "Email",
-    type: HeaderType.Email,
-    width: 220,
-    editable: true,
-    hidden: false,
-    dateOptions: {},
-  },
-  {
-    id: 4,
-    key: "age",
-    header: "Age",
-    type: HeaderType.Number,
-    width: 100,
-    editable: true,
-    hidden: false,
-    dateOptions: {},
-  },
-  {
-    id: 5,
-    key: "phone",
-    header: "Phone",
-    type: HeaderType.Text,
-    width: 160,
-    editable: true,
-    hidden: false,
-    dateOptions: {},
-  },
-  {
-    id: 6,
-    key: "address",
-    header: "Address",
-    type: HeaderType.Paragraph,
-    width: 260,
-    editable: true,
-    hidden: false,
-    dateOptions: {},
-  },
-  {
-    id: 7,
-    key: "city",
-    header: "City",
-    type: HeaderType.Text,
-    width: 150,
-    editable: true,
-    hidden: false,
-    dateOptions: {},
-  },
-  {
-    id: 8,
-    key: "state",
-    header: "State",
-    type: HeaderType.Text,
-    width: 150,
-    editable: true,
-    hidden: false,
-    dateOptions: {},
-  },
-  {
-    id: 9,
-    key: "country",
-    header: "Country",
-    type: HeaderType.Text,
-    width: 150,
-    editable: true,
-    hidden: false,
-    dateOptions: {},
-  },
-  {
-    id: 10,
-    key: "zipCode",
-    header: "Zip Code",
-    type: HeaderType.Text,
-    width: 120,
-    editable: true,
-    hidden: false,
-    dateOptions: {},
-  },
-  {
-    id: 11,
-    key: "isActive",
-    header: "Status",
-    type: HeaderType.Select,
-    width: 130,
-    editable: true,
-    hidden: false,
-    items: [
-      { id: 1, label: "Active" },
-      { id: 0, label: "Inactive" },
-    ],
-    dateOptions: {},
-  },
-  {
-    id: 12,
-    key: "role",
-    header: "Role",
-    type: HeaderType.Select,
-    width: 140,
-    editable: true,
-    hidden: false,
-    items: [
-      { id: 1, label: "Admin" },
-      { id: 2, label: "User" },
-    ],
-    dateOptions: {},
-  },
-  {
-    id: 13,
-    key: "createdAt",
-    header: "Created At",
-    type: HeaderType.Date,
-    width: 170,
-    editable: false,
-    hidden: false,
-    dateOptions: {
-      isTimeStamp: true,
-    },
-  },
-  {
-    id: 14,
-    key: "lastLogin",
-    header: "Last Login",
-    type: HeaderType.Date,
-    width: 170,
-    editable: false,
-    hidden: false,
-    dateOptions: {
-      isTimeStamp: true,
-    },
+    name: "Skyline Corp",
+    domain: "skyline.com",
+    tenantIdentifier: "SC",
+    timezone: "America/New_York",
+    status: "Active",
   },
 ];
 
-function App() {
-  const data = users as FeatureData[];
-  return (
-    <FeatureTable feature="Users" data={data} headers={userHeaders} />
-  )
-}
+export default function App() {
+  const columns = useMemo<any[]>(() => [
+    {
+      accessorKey: "name",
+      header: "Tenant Name",
+    },
 
-export default App
+    // 🌐 Domain (clickable)
+    {
+      accessorKey: "domain",
+      header: "Domain",
+      Cell: ({ cell }: any) => {
+        const value = cell.getValue();
+        return (
+          <span
+            style={{
+              color: "var(--primary)",
+              cursor: "pointer",
+              textDecoration: "underline",
+            }}
+            onClick={() =>
+              window.open(`https://${value}`, "_blank")
+            }
+          >
+            {value}
+          </span>
+        );
+      },
+    },
+
+    // 🔑 Tenant Code
+    {
+      accessorKey: "tenantIdentifier",
+      header: "Code",
+      Cell: ({ cell }: any) => (
+        <Chip
+          label={cell.getValue()}
+          size="small"
+          sx={{
+            backgroundColor: "var(--surface-alt)",
+            color: "var(--text)",
+            border: "1px solid var(--border)",
+          }}
+        />
+      ),
+    },
+
+    {
+      accessorKey: "timezone",
+      header: "Timezone",
+    },
+
+    // ✅ Status
+    {
+      accessorKey: "status",
+      header: "Status",
+      Cell: ({ cell }: any) => {
+        const value = cell.getValue();
+        return (
+          <Chip
+            label={value}
+            size="small"
+            sx={{
+              backgroundColor:
+                value === "Active"
+                  ? "var(--success)"
+                  : "var(--border)",
+              color: value === "Active" ? "#fff" : "var(--text)",
+            }}
+          />
+        );
+      },
+    },
+
+    // ⚙️ Actions
+    {
+      header: "Actions",
+      Cell: () => (
+        <Box sx={{ display: "flex", gap: 1 }}>
+          <IconButton size="small">
+            <FontAwesomeIcon icon={faPenToSquare} />
+          </IconButton>
+
+          <IconButton size="small">
+            <FontAwesomeIcon icon={faTrash} />
+          </IconButton>
+        </Box>
+      ),
+    },
+  ], []);
+
+  return (
+    <Box sx={{ p: 2 }}>
+
+      {/* 🔹 Title */}
+      <Typography variant="h6" sx={{ mb: 2 }}>
+        Manage Tenants
+      </Typography>
+
+      {/* 🔹 Table */}
+      <Paper
+        elevation={0}
+        sx={{
+          backgroundColor: "var(--surface)",
+          border: "1px solid var(--border)",
+        }}
+      >
+        <ReactTable
+          columns={columns}
+          data={tenants}
+          pageSize={50}
+          enableColumnResizing={true} enableColumnPinning={true}
+        />
+      </Paper>
+    </Box>
+  );
+}
